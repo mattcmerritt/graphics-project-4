@@ -123,8 +123,6 @@ class BoxObj(GeomObj):
             Vector3(0, 0, 1),   # back
         ]
 
-        print(f'Ray: {ray}')
-
         # calculate all of the six intersection point t values
         t_values = [None, None, None, None, None, None]
 
@@ -146,22 +144,17 @@ class BoxObj(GeomObj):
         t_min = float('inf')
 
         for i in range(len(t_values)):
-            print(f'T_{i}: {t_values[i]}')
             # point checking
             if t_values[i] == None:
                 t_values[i] = -float('inf')
             else:
                 point = ray.eval(t_values[i])
-                print(f'Plane hit: {point}')
-                if abs(point.x) >= 1 or abs(point.y) >= 1 or abs(point.z) >= 1:
-                    print('Moved to negative inf')
+                if abs(point.x) > 1 or abs(point.y) > 1 or abs(point.z) > 1:
                     t_values[i] = -float('inf')
             # min tracking
             if t_values[i] >= 0 and t_values[i] < t_min:
                 t_min = t_values[i]
                 t_min_i = i
-            
-        print(f'T_min: {t_min}')
 
         if t_min_i < 0:
             return False
