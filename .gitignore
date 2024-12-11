@@ -1,2 +1,5 @@
 # prevent compiled python files from being pushed to git
 /__pycache__
+
+# prevent processed images from being pushed
+*.png
