@@ -85,7 +85,94 @@ class BoxObj(GeomObj):
         glPopMatrix()
 
     def local_intersect(self, ray, best_hit):
-        return False
+        """
+        explanation of logic:
+        each of the faces can be defined by the following planes:
+          x = -1 (left)       x = 1 (right)
+          y = -1 (bottom)     y = 1 (top)
+          z = -1 (front)      z = 1 (back)
 
-    def compute_normal(self, point):
-        normal = Vector3(0, 0, 0)
+        let the origin of the ray be (sx, sy, sz) and (dx, dy, dz) be the direction vector
+        any point on the ray can be defined with the following parametric equations:
+          px = sx + t * dx
+          py = sy + t * dy
+          pz = sz + t * dz
+
+        with this information, we can find the point where the ray hits the plane by
+          by setting px, py, or pz equal the value from the plane equation.
+        for example, working with the front:
+          -1 = sz + t * dz 
+              or
+          t = (-1 - sx) / dx
+        NOTE: for this to work, need special cases for when ray is parallel to plane
+
+        with the t values, the points are computed, and each coordinate must fall on [-1, 1]
+          if a coordinate is outside these bounds, the ray misses the face
+
+        using the t values for each face, the lowest positive t value is yields the point of
+          of first contact, and is used to determine which normal is returned based on the face hit
+        """
+
+        # normals for each face
+        normals = [
+            Vector3(-1, 0, 0),  # right
+            Vector3(0, -1, 0),  # bottom
+            Vector3(0, 0, -1),  # front
+            Vector3(1, 0, 0),   # left
+            Vector3(0, 1, 0),   # top
+            Vector3(0, 0, 1),   # back
+        ]
+
+        print(f'Ray: {ray}')
+
+        # calculate all of the six intersection point t values
+        t_values = [None, None, None, None, None, None]
+
+        if ray.dir.dx != 0:
+            t_values[0] = (-1 - ray.source.x) / ray.dir.dx  # left
+            t_values[3] = (1 - ray.source.x) / ray.dir.dx   # right
+        if ray.dir.dy != 0:
+            t_values[1] = (-1 - ray.source.y) / ray.dir.dy  # bottom
+            t_values[4] = (1 - ray.source.y) / ray.dir.dy   # top
+        if ray.dir.dz != 0:
+            t_values[2] = (-1 - ray.source.z) / ray.dir.dz  # front
+            t_values[5] = (1 - ray.source.z) / ray.dir.dz   # back
+
+        # calculate the points
+        #   if a t value is not found, replace with -inf
+        #   if an intersection is not in the face, replace with -inf
+        # simultaneously, find the minimum positive t value after calculations
+        t_min_i = -1
+        t_min = float('inf')
+
+        for i in range(len(t_values)):
+            print(f'T_{i}: {t_values[i]}')
+            # point checking
+            if t_values[i] == None:
+                t_values[i] = -float('inf')
+            else:
+                point = ray.eval(t_values[i])
+                print(f'Plane hit: {point}')
+                if abs(point.x) >= 1 or abs(point.y) >= 1 or abs(point.z) >= 1:
+                    print('Moved to negative inf')
+                    t_values[i] = -float('inf')
+            # min tracking
+            if t_values[i] >= 0 and t_values[i] < t_min:
+                t_min = t_values[i]
+                t_min_i = i
+            
+        print(f'T_min: {t_min}')
+
+        if t_min_i < 0:
+            return False
+        
+        best_hit.t = t_min
+        best_hit.point = ray.eval(t_min)
+        best_hit.norm = normals[t_min_i]
+        best_hit.norm.normalize()   # stress relief normalization
+        best_hit.obj = self
+        return True
+
+    # TODO: handled by local_intersect
+    # def compute_normal(self, point):
+    #     normal = Vector3(0, 0, 0)
