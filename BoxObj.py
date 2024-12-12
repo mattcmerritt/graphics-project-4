@@ -156,7 +156,7 @@ class BoxObj(GeomObj):
                 t_min = t_values[i]
                 t_min_i = i
 
-        if t_min_i < 0:
+        if t_min_i < 0 or (t_min >= best_hit.t and best_hit.t != -1):
             return False
         
         best_hit.t = t_min
