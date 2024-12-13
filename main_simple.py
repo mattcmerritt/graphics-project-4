@@ -109,14 +109,14 @@ def init_scene():
     forward_wall.name = "Forward Wall"
     forward_wall.set_material(mat)
     forward_wall.translate(0, 3, -10)
-    forward_wall.scale(11, 5, 1)
+    forward_wall.scale(9, 5, 1)
     scn.add_object(forward_wall)
 
     backward_wall = BoxObj()
     backward_wall.name = "Backward Wall"
     backward_wall.set_material(mat)
     backward_wall.translate(0, 3, 10)
-    backward_wall.scale(11, 5, 1)
+    backward_wall.scale(9, 5, 1)
     scn.add_object(backward_wall)
 
     left_wall = BoxObj()
