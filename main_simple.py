@@ -24,6 +24,7 @@ from Window import Window
 from Scene import Scene
 from SphereObj import SphereObj
 from BoxObj import BoxObj
+from CylinderObj import CylinderObj
 from Material import Material
 from Light import Light
 from Color import Color
@@ -84,12 +85,22 @@ def init_scene():
     mat = Material()
     mat.set_copper()
     mat.set_reflectivity(0.1)
-    ball = SphereObj()
-    ball.set_material(mat)
-    ball.translate(0,1,0)
-    ball.scale(1, 2, 1)
-    ball.name = "Ball 1"
-    scn.add_object(ball)
+    tube = CylinderObj()
+    tube.set_material(mat)
+    tube.translate(0,1,0)
+    tube.scale(1, 1, 1)
+    tube.name = "Tube 1"
+    scn.add_object(tube)
+
+    # mat = Material()
+    # mat.set_copper()
+    # mat.set_reflectivity(0.1)
+    # ball = SphereObj()
+    # ball.set_material(mat)
+    # ball.translate(0,1,0)
+    # ball.scale(1, 2, 1)
+    # ball.name = "Ball 1"
+    # scn.add_object(ball)
 
     mat = Material()
     mat.set_silver()
