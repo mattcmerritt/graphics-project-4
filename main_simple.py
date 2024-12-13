@@ -81,14 +81,26 @@ def init_scene():
     cam.set_lens_shape(init_view_angle, FRAME_WIDTH / FRAME_HEIGHT, init_near, init_far)
 
     # Create objects and add them to the scene
+    # mat = Material()
+    # mat.set_copper()
+    # mat.set_reflectivity(0.1)
+    # ball = SphereObj()
+    # ball.set_material(mat)
+    # ball.translate(0,1,0)
+    # ball.scale(1, 2, 1)
+    # ball.name = "Ball 1"
+    # scn.add_object(ball)
+
+    # TODO: move elsewhere
     mat = Material()
     mat.set_copper()
     mat.set_reflectivity(0.1)
-    ball = SphereObj()
+    ball = BoxObj()
+    ball.set_texture('resources/example_texture.png', 128)
     ball.set_material(mat)
     ball.translate(0,1,0)
     ball.scale(1, 2, 1)
-    ball.name = "Ball 1"
+    ball.name = "Box 1"
     scn.add_object(ball)
 
     mat = Material()
@@ -112,12 +124,12 @@ def init_scene():
     forward_wall.scale(9, 5, 1)
     scn.add_object(forward_wall)
 
-    backward_wall = BoxObj()
-    backward_wall.name = "Backward Wall"
-    backward_wall.set_material(mat)
-    backward_wall.translate(0, 3, 10)
-    backward_wall.scale(9, 5, 1)
-    scn.add_object(backward_wall)
+    # backward_wall = BoxObj()
+    # backward_wall.name = "Backward Wall"
+    # backward_wall.set_material(mat)
+    # backward_wall.translate(0, 3, 10)
+    # backward_wall.scale(9, 5, 1)
+    # scn.add_object(backward_wall)
 
     left_wall = BoxObj()
     left_wall.name = "Left Wall"

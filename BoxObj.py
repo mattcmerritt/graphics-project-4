@@ -170,6 +170,47 @@ class BoxObj(GeomObj):
         best_hit.norm = normals[t_min_i]
         best_hit.norm.normalize()   # stress relief normalization
         best_hit.obj = self
+
+        # texturing
+        # TODO: improve tiling with rotations
+        
+        # based on what plane we are working in, convert hit to 2D point
+        # the conversion to texture coordinates uses the following equation:
+        # tex_pos = world_pos * tex_scale / world_scale - world_min_pos * tex_scale / world_scale
+        if t_min_i == 0:    # right plane (-x, YZ plane)
+            world_x = best_hit.point.y
+            world_y = best_hit.point.z
+            texture_x = world_x * 1/2 - (-1 * 1/2)
+            texture_y = world_y * 1/2 - (-1 * 1/2)
+        elif t_min_i == 1:  # bottom plane (-y, XZ plane)
+            world_x = best_hit.point.x
+            world_y = best_hit.point.z
+            texture_x = world_x * 1/2 - (-1 * 1/2)
+            texture_y = world_y * 1/2 - (-1 * 1/2)
+        elif t_min_i == 2:  # front plane (-z, XY plane)
+            world_x = best_hit.point.x
+            world_y = best_hit.point.y
+            texture_x = world_x * 1/2 - (-1 * 1/2)
+            texture_y = world_y * 1/2 - (-1 * 1/2)
+        elif t_min_i == 3:    # left plane (+x, YZ plane)
+            world_x = best_hit.point.y
+            world_y = best_hit.point.z
+            texture_x = world_x * 1/2 - (-1 * 1/2)
+            texture_y = world_y * 1/2 - (-1 * 1/2)
+        elif t_min_i == 4:  # top plane (+y, XZ plane)
+            world_x = best_hit.point.x
+            world_y = best_hit.point.z
+            texture_x = world_x * 1/2 - (-1 * 1/2)
+            texture_y = world_y * 1/2 - (-1 * 1/2)
+        elif t_min_i == 5:  # back plane (+z, XY plane)
+            world_x = best_hit.point.x
+            world_y = best_hit.point.y
+            texture_x = world_x * 1/2 - (-1 * 1/2)
+            texture_y = world_y * 1/2 - (-1 * 1/2)
+
+        # grab color from pixel map
+        best_hit.texture_color = self.get_texture_pixel_color(texture_x, texture_y)
+        
         return True
 
     # TODO: handled by local_intersect

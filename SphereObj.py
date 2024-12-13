@@ -4,6 +4,7 @@ from Ray import Ray
 from Hit import Hit
 from Point3 import Point3
 from Vector3 import Vector3
+from Color import Color
 from OpenGL.GLU import *
 
 class SphereObj(GeomObj):
@@ -48,4 +49,6 @@ class SphereObj(GeomObj):
         best_hit.norm = Vector3(best_hit.point.x, best_hit.point.y, best_hit.point.z)
         best_hit.norm.normalize()
         best_hit.obj = self
+        # TODO: implement texturing for spheres
+        best_hit.texture_color = Color(1, 1, 1, 1) # defaults to white
         return True

@@ -3,6 +3,7 @@ from Matrix import Matrix
 from Material import Material
 from Ray import Ray
 from Hit import Hit
+from Color import Color
 from OpenGL.GL import *
 from PIL import Image
 
@@ -86,13 +87,6 @@ class GeomObj:
         self.texture = self.texture.transpose(method=Image.Transpose.FLIP_TOP_BOTTOM)
 
     """
-    best_hit: Same as from local_intersect, stores the hit location
-    Returns: Color from point hit on the shape
-    """
-    def get_color_from_texture(self, best_hit):
-        raise NotImplementedError("Subclasses must implement get_color_from_texture.")
-
-    """
     Helper method to get a pixel from the texture of any given size.
     
     x: Texture coordinate [0, 1]
@@ -100,9 +94,15 @@ class GeomObj:
     Returns: Color from texture
     """
     def get_texture_pixel_color(self, x, y):
+        # if no texture is loaded, use white
+        if not hasattr(self, 'texture_dim') or not hasattr(self, 'texture'):
+            # print(f'{self.name} has no dim/texture, using white!')
+            return Color(1, 1, 1, 1)
+        # print(f'looking for color at ({x}, {y})')
+
         # change coordinates to be integers relative to dimensions
-        tx = round(self.texture_dim * x)
-        ty = round(self.texture_dim * y)
+        tx = round((self.texture_dim - 1) * x)
+        ty = round((self.texture_dim - 1) * y)
 
         # grab pixel colors from image file
         (r, g, b, a) = self.texture.getpixel((tx, ty))

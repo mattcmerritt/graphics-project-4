@@ -168,6 +168,9 @@ class Scene:
                 ignore = [best_hit.obj]
                 reflection_color = self.shade(reflection_ray, depth + 1, reflective_coefficient, ignore=ignore)
                 color.add_mix(reflection_color, mat.get_reflectivity())
+
+            # texturing
+            color.mult(best_hit.texture_color)
         else:
             color.set(self.background)
     
