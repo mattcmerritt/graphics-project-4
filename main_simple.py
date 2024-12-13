@@ -40,8 +40,8 @@ init_eye = Point3(0, 0, 10)
 init_look = Point3(0, 0, 0)
 init_up = Vector3(0, 1, 0)
 # TODO: remove overhead view
-# init_eye = Point3(-18.706, 23.000, 21.890)
-# init_look = Point3(-18.706 - (-0.57356), 23.000 - (0.51504), 21.890 - (0.63700))
+# init_eye = Point3(-7.291, 8.583, 7.718)
+# init_look = Point3(-7.291 - (-0.57356), 8.583 - (0.51504), 7.718 - (0.63700))
 init_view_angle = 45.0
 init_near = 0.1
 init_far = 50.0
@@ -51,6 +51,8 @@ win = Window(FRAME_WIDTH, FRAME_HEIGHT, FRAME_TITLE)
 scn = Scene()
 light_angle = 0
 light_speed = 1
+# TODO: remove faster speed
+light_speed = 10
 light_distance = 5
 animate = True  # Animation
 
@@ -100,6 +102,7 @@ def init_scene():
     mat.set_reflectivity(0.1)
     ball = BoxObj()
     ball.set_texture('resources/example_texture.png', 128)
+    ball.set_normal_map('resources/beveled_edges.png')
     ball.set_material(mat)
     ball.translate(0,1,0)
     ball.scale(1, 2, 1)
@@ -209,7 +212,7 @@ def raytrace_records(record):
         scn.render_solid(nav.get_camera(), win)   # Render solid first so user can see it
         pygame.display.flip()
         scn.render_ray_traced(nav.get_camera(), win, block_size)
-        win.save_pixmap('frame{0}.png'.format(record_count))
+        win.save_pixmap('frame{0:04}.png'.format(record_count))
         record_count+=1
 
     pygame.event.clear() # Takes so long to render, need to clear events that happened while rendering!

@@ -229,23 +229,43 @@ class BoxObj(GeomObj):
 
         # grab color from pixel map
         best_hit.texture_color = self.get_texture_pixel_color(texture_x, texture_y)
+
+        # based on what plane we are working in, convert hit to 2D point
+        # the conversion to texture coordinates uses the following equation:
+        # tex_pos = world_pos * tex_scale / world_scale - world_min_pos * tex_scale / world_scale
+        # note: the tiling transformations are removed here to not make the normal map lighting look strange
+        if t_min_i == 0:    # right plane (-x, YZ plane)
+            world_x = best_hit.point.y
+            world_y = best_hit.point.z
+            texture_x = world_y * 1/2 - (-1 * 1/2)
+            texture_y = world_x * 1/2 - (-1 * 1/2)
+        elif t_min_i == 1:  # bottom plane (-y, XZ plane)
+            world_x = best_hit.point.x
+            world_y = best_hit.point.z
+            texture_x = world_x * 1/2 - (-1 * 1/2)
+            texture_y = world_y * 1/2 - (-1 * 1/2)
+        elif t_min_i == 2:  # front plane (-z, XY plane)
+            world_x = best_hit.point.x
+            world_y = best_hit.point.y
+            texture_x = world_x * 1/2 - (-1 * 1/2)
+            texture_y = world_y * 1/2 - (-1 * 1/2)
+        elif t_min_i == 3:    # left plane (+x, YZ plane)
+            world_x = best_hit.point.y
+            world_y = best_hit.point.z
+            texture_x = world_y * 1/2 - (-1 * 1/2)
+            texture_y = world_x * 1/2 - (-1 * 1/2)
+        elif t_min_i == 4:  # top plane (+y, XZ plane)
+            world_x = best_hit.point.x
+            world_y = best_hit.point.z
+            texture_x = world_x * 1/2 - (-1 * 1/2)
+            texture_y = world_y * 1/2 - (-1 * 1/2)
+        elif t_min_i == 5:  # back plane (+z, XY plane)
+            world_x = best_hit.point.x
+            world_y = best_hit.point.y
+            texture_x = world_x * 1/2 - (-1 * 1/2)
+            texture_y = world_y * 1/2 - (-1 * 1/2)
+
+        # adjust vector for norm based on normal map
+        best_hit.norm = best_hit.norm.__add__(self.get_normal_map_pixel_vector(texture_x, texture_y))
         
         return True
-
-    # TODO: handled by local_intersect
-    # def compute_normal(self, point):
-    #     normal = Vector3(0, 0, 0)
-
-    def get_color_from_texture(self, best_hit):
-        """
-        Method to determine the color of a point on the cube using the attached texture.
-        Returns the color associated
-        
-        logic:
-        1. use the normal to determine which of the six faces was hit
-        2. convert the hit point to a 2D point on the plane hit
-            planes are XY (front/back), XZ (top/bottom), and YZ (left/right)
-        3. map the 2D world point to a 2D texture point
-        4. sample the texture image at the 2D texture point to get the color
-        """
-        raise NotImplementedError("Subclasses must implement get_color_from_texture.")

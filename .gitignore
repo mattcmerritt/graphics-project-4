@@ -3,3 +3,4 @@
 
 # prevent processed images from being pushed
 /*.png
+/*.mp4

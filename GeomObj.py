@@ -4,6 +4,7 @@ from Material import Material
 from Ray import Ray
 from Hit import Hit
 from Color import Color
+from Vector3 import Vector3
 from OpenGL.GL import *
 from PIL import Image
 
@@ -114,3 +115,42 @@ class GeomObj:
         (r, g, b, a) = self.texture.getpixel((tx, ty))
 
         return Color(r / 255, g / 255, b / 255, a / 255)
+
+    """
+    Attaching a normal map for the texture to the shape.
+    Textures will always fill the entire shape, and are not tiled.
+    Requires all loaded textures to be square
+
+    filename: Name of file relative to base directory (usually will be 'resources/file.png')
+    dim: Dimension of the image (MUST BE SQUARE)
+    """
+    def set_normal_map(self, filename):
+        self.normal_map = Image.open(filename)
+        self.normal_map = self.normal_map.transpose(method=Image.Transpose.FLIP_TOP_BOTTOM)
+        self.normal_map = self.normal_map.resize((self.texture_dim, self.texture_dim))
+
+    """
+    Helper method to get a pixel from the normal map of any given size.
+    
+    x: Texture coordinate [0, 1]
+    y: Texture coordinate [0, 1]
+    Returns: Vector from normal
+    """
+    def get_normal_map_pixel_vector(self, x, y):
+        # if no map is loaded, use white
+        if not hasattr(self, 'texture_dim') or not hasattr(self, 'normal_map'):
+            return Vector3(0, 0, 0)
+
+        # change coordinates to be integers relative to dimensions
+        nmx = round((self.texture_dim - 1) * x)
+        nmy = round((self.texture_dim - 1) * y)
+
+        # grab pixel colors from image file
+        (x, y, z, _) = self.normal_map.getpixel((nmx, nmy))
+
+        # adjustments to match format
+        x = (x / 255) * 2 - 1
+        y = (y / 255) * 2 - 1
+        z = (z / 255) * 2 - 1
+
+        return Vector3(x, y, z)
