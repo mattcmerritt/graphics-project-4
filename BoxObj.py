@@ -93,7 +93,6 @@ class BoxObj(GeomObj):
         glPushMatrix()
         glRotatef(-90, 1, 0, 0)
         glTranslate(0,0,1)
-        glScale(1, -1, 1)
         self.draw_side(slices, slices)
         glPopMatrix()
 
