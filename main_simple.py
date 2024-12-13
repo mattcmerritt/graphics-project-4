@@ -102,36 +102,36 @@ def init_scene():
     scn.add_object(floor)
 
     # TODO: REPLACE LATER
-    # mat = Material()
-    # mat.set_pewter()
-    # mat.set_reflectivity(0)
-    # forward_wall = BoxObj()
-    # forward_wall.name = "Forward Wall"
-    # forward_wall.set_material(mat)
-    # forward_wall.translate(0, 3, -10)
-    # forward_wall.scale(11, 5, 1)
-    # scn.add_object(forward_wall)
+    mat = Material()
+    mat.set_pewter()
+    mat.set_reflectivity(0)
+    forward_wall = BoxObj()
+    forward_wall.name = "Forward Wall"
+    forward_wall.set_material(mat)
+    forward_wall.translate(0, 3, -10)
+    forward_wall.scale(11, 5, 1)
+    scn.add_object(forward_wall)
 
-    # backward_wall = BoxObj()
-    # backward_wall.name = "Backward Wall"
-    # backward_wall.set_material(mat)
-    # backward_wall.translate(0, 3, 10)
-    # backward_wall.scale(11, 5, 1)
-    # scn.add_object(backward_wall)
+    backward_wall = BoxObj()
+    backward_wall.name = "Backward Wall"
+    backward_wall.set_material(mat)
+    backward_wall.translate(0, 3, 10)
+    backward_wall.scale(11, 5, 1)
+    scn.add_object(backward_wall)
 
-    # left_wall = BoxObj()
-    # left_wall.name = "Left Wall"
-    # left_wall.set_material(mat)
-    # left_wall.translate(-10, 3, 0)
-    # left_wall.scale(1, 5, 9)
-    # scn.add_object(left_wall)
+    left_wall = BoxObj()
+    left_wall.name = "Left Wall"
+    left_wall.set_material(mat)
+    left_wall.translate(-10, 3, 0)
+    left_wall.scale(1, 5, 9)
+    scn.add_object(left_wall)
 
-    # right_wall = BoxObj()
-    # right_wall.name = "Right Wall"
-    # right_wall.set_material(mat)
-    # right_wall.translate(10, 3, 0)
-    # right_wall.scale(1, 5, 9)
-    # scn.add_object(right_wall)
+    right_wall = BoxObj()
+    right_wall.name = "Right Wall"
+    right_wall.set_material(mat)
+    right_wall.translate(10, 3, 0)
+    right_wall.scale(1, 5, 9)
+    scn.add_object(right_wall)
 
     # Light setup
     lightA = Light()
