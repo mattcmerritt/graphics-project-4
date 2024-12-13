@@ -91,23 +91,35 @@ class CylinderObj(GeomObj):
         # find real solutions, lower one is entry point
         t1 = (-b - sqrt_disc) / (2*a)
         t2 = (-b + sqrt_disc) / (2*a)
-        t_min = min(t1, t2)
 
-        # if solution worse than existing
-        if (t_min >= best_hit.t and best_hit.t != -1):
-            return False
-          
-        # fail if solution point does not collide with a valid z coordinate for the cylinder
-        if ray.source.z + t_min * ray.dir.dz < 0 or ray.source.z + t_min * ray.dir.dz > self.height:
-            return False
+        (t_min, t_max) = (t1, t2) if t1 < t2 else (t2, t1)
 
-        # determine if inside or outside point should be used
-        # TODO: do it
+        # figure if inside or outside
+        invert_for_inside = 1           # default no inversion (outside)
+
+        # test t_min, if t_min is ok (not behind start and within bounded cylinder) we are outside
+        if t_min < 0 or (ray.source.z + t_min * ray.dir.dz < 0 or ray.source.z + t_min * ray.dir.dz > self.height):
+            invert_for_inside = -1        # since test failed, must be inside, or no valid collision
+        # assuming t_max doesn't fail the same test, we are inside
+        # if it does fail, it won't draw anyways - no need to change anything again
+
+        # clamp
+        if ray.source.z + t1 * ray.dir.dz < 0 or ray.source.z + t1 * ray.dir.dz > self.height:
+            t1 = -1   # fail if solution point does not collide with a valid z coordinate for the cylinder
+        if ray.source.z + t2 * ray.dir.dz < 0 or ray.source.z + t2 * ray.dir.dz > self.height:
+            t2 = -1   # fail if solution point does not collide with a valid z coordinate for the cylinder
+
+        # compare after clamping to figure out which point to use
+        t_min = min(t1, t2) if t1 > 0 and t2 > 0 else max(t1, t2)
+
+        # if solution is behind camera or worse than existing
+        if t_min < 0 or (t_min >= best_hit.t and best_hit.t != -1):
+            return False
         
         # else new solution
         best_hit.t = t_min
         best_hit.point = ray.eval(t_min)
-        best_hit.norm = Vector3(best_hit.point.x, best_hit.point.y, best_hit.point.z)
+        best_hit.norm = Vector3(invert_for_inside * best_hit.point.x, invert_for_inside * best_hit.point.y, invert_for_inside * (self.r_end-self.r_start) / 2)
         best_hit.norm.normalize()   # stress relief normalization
         best_hit.obj = self
         return True
