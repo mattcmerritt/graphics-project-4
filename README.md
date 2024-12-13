@@ -49,6 +49,12 @@ Notable code changes from the base code provided in class include:
 
 All textures are available in the `resources` directory.
 
+## Attributions
+
+All implementations and modifications are our own. Textures are our own, unless otherwise mentioned below.
+
+- beveled_edges.png - Cropped and rescaled from https://commons.wikimedia.org/wiki/File:Normal_map_example_-_Map.png, by Julian Herzog
+
 ## Features
 
 The features are the following:
@@ -80,5 +86,5 @@ Raytracing Contorls:
 - Period (.)        - Stop moving light
 
 System Controls:
-  H - Show help message
-  ESC - Exit program
+- H                 - Show help message
+- ESC               - Exit program
