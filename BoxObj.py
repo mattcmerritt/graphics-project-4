@@ -180,7 +180,7 @@ class BoxObj(GeomObj):
         if t_min_i == 0:    # right plane (-x, YZ plane)
             world_x = best_hit.point.y
             world_y = best_hit.point.z
-            texture_x = world_x * 1/2 - (-1 * 1/2)
+            texture_x = 1 - (world_x * 1/2 - (-1 * 1/2))
             texture_y = world_y * 1/2 - (-1 * 1/2)
         elif t_min_i == 1:  # bottom plane (-y, XZ plane)
             world_x = best_hit.point.x
@@ -190,8 +190,8 @@ class BoxObj(GeomObj):
         elif t_min_i == 2:  # front plane (-z, XY plane)
             world_x = best_hit.point.x
             world_y = best_hit.point.y
-            texture_x = world_x * 1/2 - (-1 * 1/2)
-            texture_y = world_y * 1/2 - (-1 * 1/2)
+            texture_x = 1 - (world_x * 1/2 - (-1 * 1/2))
+            texture_y = 1 - (world_y * 1/2 - (-1 * 1/2))
         elif t_min_i == 3:    # left plane (+x, YZ plane)
             world_x = best_hit.point.y
             world_y = best_hit.point.z
@@ -201,11 +201,11 @@ class BoxObj(GeomObj):
             world_x = best_hit.point.x
             world_y = best_hit.point.z
             texture_x = world_x * 1/2 - (-1 * 1/2)
-            texture_y = world_y * 1/2 - (-1 * 1/2)
+            texture_y = 1 - (world_y * 1/2 - (-1 * 1/2))
         elif t_min_i == 5:  # back plane (+z, XY plane)
             world_x = best_hit.point.x
             world_y = best_hit.point.y
-            texture_x = world_x * 1/2 - (-1 * 1/2)
+            texture_x = 1 - (world_x * 1/2 - (-1 * 1/2))
             texture_y = world_y * 1/2 - (-1 * 1/2)
 
         # grab color from pixel map

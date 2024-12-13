@@ -39,6 +39,9 @@ FRAME_TITLE = "Go Ray Tracer!"
 init_eye = Point3(0, 0, 10)
 init_look = Point3(0, 0, 0)
 init_up = Vector3(0, 1, 0)
+# TODO: remove overhead view
+# init_eye = Point3(-18.706, 23.000, 21.890)
+# init_look = Point3(-18.706 - (-0.57356), 23.000 - (0.51504), 21.890 - (0.63700))
 init_view_angle = 45.0
 init_near = 0.1
 init_far = 50.0
@@ -96,7 +99,7 @@ def init_scene():
     mat.set_copper()
     mat.set_reflectivity(0.1)
     ball = BoxObj()
-    ball.set_texture('resources/example_texture.png', 128)
+    ball.set_texture('resources/line.png', 128)
     ball.set_material(mat)
     ball.translate(0,1,0)
     ball.scale(1, 2, 1)
