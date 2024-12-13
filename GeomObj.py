@@ -79,12 +79,18 @@ class GeomObj:
     Textures will always fill the entire shape, and are not tiled.
     Requires all loaded textures to be square
 
+    filename: Name of file relative to base directory (usually will be 'resources/file.png')
     dim: Dimension of the image (MUST BE SQUARE)
     """
     def set_texture(self, filename, dim):
         self.texture_dim = dim
         self.texture = Image.open(filename)
         self.texture = self.texture.transpose(method=Image.Transpose.FLIP_TOP_BOTTOM)
+        texture_bytes = self.texture.tobytes('raw')
+
+        self.gl_texture = glGenTextures(1)
+        glBindTexture(GL_TEXTURE_2D, self.gl_texture)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, dim, dim, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture_bytes)
 
     """
     Helper method to get a pixel from the texture of any given size.

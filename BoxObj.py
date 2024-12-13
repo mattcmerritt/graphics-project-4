@@ -8,12 +8,21 @@ class BoxObj(GeomObj):
     def __init__(self):
         super().__init__()
 
-    @staticmethod
-    def draw_side(slices_x, slices_y):
+    def draw_side(self, slices_x, slices_y):
         """ Draw a plane of the specified dimension.
             The plane is a 2x2 square centered at origin (coordinates go -1 to 1).
             slices_x and slices_y are the number of divisions in each dimension
         """
+        textured = hasattr(self, 'texture')
+
+        if textured:
+            glBindTexture(GL_TEXTURE_2D, self.gl_texture)
+            glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE) # GL_MODULATE for mutliplicative blending
+            glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+            glEnable(GL_TEXTURE_2D) # Enable/Disable each time or OpenGL ALWAYS expects texturing!
+
         dx = 2/slices_x  # Change in x direction
         dy = 2/slices_y  # Change in y direction
 
@@ -23,10 +32,14 @@ class BoxObj(GeomObj):
             glBegin(GL_TRIANGLE_STRIP)
             cx = -1
             for i in range(slices_x):
+                if textured: glTexCoord2f(cx * 1/2 + 0.5, (y+dy) * 1/2 + 0.5)
                 glVertex3f(cx, y+dy, 0)
+                if textured: glTexCoord2f(cx * 1/2 + 0.5, y * 1/2 + 0.5)
                 glVertex3f(cx, y, 0)
                 cx += dx
+            if textured: glTexCoord2f(1, (y+dy) * 1/2 + 0.5)
             glVertex3f(1, y+dy, 0)
+            if textured: glTexCoord2f(1, y * 1/2 + 0.5)
             glVertex3f(1, y, 0)
             glEnd()
             y += dy
@@ -41,47 +54,49 @@ class BoxObj(GeomObj):
         # glEnd()
         # if isEnabled: glEnable(GL_LIGHTING)
 
+        if textured: glDisable(GL_TEXTURE_2D)
+
     def render_solid(self, slices=10):
         """ Draw a unit cube with one corner at origin in positive octant."""    
         # Draw side 1 (Front)
         glPushMatrix()
         glTranslate(0, 0, 1)
-        BoxObj.draw_side(slices, slices)
+        self.draw_side(slices, slices)
         glPopMatrix()
 
         # Draw side 2 (Back)
         glPushMatrix()
         glRotated(180, 0, 1, 0)
         glTranslate(0, 0, 1)
-        BoxObj.draw_side(slices, slices)
+        self.draw_side(slices, slices)
         glPopMatrix()
 
         # Draw side 3 (Left)
         glPushMatrix()
         glRotatef(-90, 0, 1, 0)
         glTranslate(0,0,1)
-        BoxObj.draw_side(slices, slices)
+        self.draw_side(slices, slices)
         glPopMatrix()
 
         # Draw side 4 (Right)
         glPushMatrix()
         glRotatef(90, 0, 1, 0)
         glTranslate(0,0,1)
-        BoxObj.draw_side(slices, slices)
+        self.draw_side(slices, slices)
         glPopMatrix()
 
         # Draw side 5 (Top)
         glPushMatrix()
         glRotatef(-90, 1, 0, 0)
         glTranslate(0,0,1)
-        BoxObj.draw_side(slices, slices)
+        self.draw_side(slices, slices)
         glPopMatrix()
 
         # Draw side 6 (Bottom)
         glPushMatrix()
         glRotatef(90, 1, 0, 0)
         glTranslate(0,0,1)
-        BoxObj.draw_side(slices, slices)
+        self.draw_side(slices, slices)
         glPopMatrix()
 
     def local_intersect(self, ray, best_hit):

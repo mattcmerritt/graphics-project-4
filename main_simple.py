@@ -99,7 +99,7 @@ def init_scene():
     mat.set_copper()
     mat.set_reflectivity(0.1)
     ball = BoxObj()
-    ball.set_texture('resources/line.png', 128)
+    ball.set_texture('resources/example_texture.png', 128)
     ball.set_material(mat)
     ball.translate(0,1,0)
     ball.scale(1, 2, 1)
