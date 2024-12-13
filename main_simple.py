@@ -115,7 +115,7 @@ def init_scene():
     # TODO: REPLACE LATER
     mat = Material()
     mat.set_pewter()
-    mat.set_reflectivity(0)
+    mat.set_reflectivity(0.1)
     forward_wall = BoxObj()
     forward_wall.name = "Forward Wall"
     forward_wall.set_material(mat)
