@@ -267,5 +267,6 @@ class BoxObj(GeomObj):
 
         # adjust vector for norm based on normal map
         best_hit.norm = best_hit.norm.__add__(self.get_normal_map_pixel_vector(texture_x, texture_y))
+        best_hit.norm.normalize()
         
         return True
