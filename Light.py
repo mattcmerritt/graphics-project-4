@@ -70,11 +70,13 @@ class Light:
         # Determine if there is an object in the way from hit.point to light's position/direction
         first_hit = Hit()
         if self.position[3] != 0:  # Positional light
-            first_hit.t = 1 # Stop the search at the light source # Directional light
-
-        # We will test a ray from object (hit.point) to the light (infinitely far away or at t=1)
-        hit_loc = hit.point.__copy__()
-        ray = Ray(hit_loc, Vector3(self.position[0] - hit_loc.x, self.position[1] - hit_loc.y, self.position[2] - hit_loc.z))
+            first_hit.t = 1 # Stop the search at the light source 
+            # We will test a ray from object (hit.point) to the light (infinitely far away or at t=1)
+            hit_loc = hit.point.__copy__()
+            ray = Ray(hit_loc, Vector3(self.position[0] - hit_loc.x, self.position[1] - hit_loc.y, self.position[2] - hit_loc.z))
+        else: # Directional light
+            ray = Ray(hit.point.__copy__(), Vector3(self.position[0], self.position[1], self.position[2]))
+        
         ignore_list = [self.obj, hit.obj] # Objects to skip in intersection test
         return 0 if scene.intersect(ray, first_hit, skip_translucent=True, just_one=True, ignore=ignore_list) else 1
  
