@@ -114,7 +114,7 @@ def init_scene():
 
     tube = CylinderObj(1, 2, 3)
     tube.set_material(mat)
-    tube.translate(0,1,0)
+    tube.translate(5,1,0)
     tube.scale(1, 1, 1)
     tube.name = "Tube 1"
     scn.add_object(tube)
