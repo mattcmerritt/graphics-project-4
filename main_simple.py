@@ -94,7 +94,6 @@ def init_scene():
     mat = Material()
     mat.set_silver()
     mat.set_reflectivity(0.8)
-    # mat.set_emissive_only(Color(1, 0, 0, 1)) # TODO: REMOVE, used for testing surfaces
     floor = BoxObj()
     floor.name = "Floor"
     floor.set_material(mat)

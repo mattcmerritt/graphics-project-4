@@ -125,16 +125,23 @@ class BoxObj(GeomObj):
 
         # calculate all of the six intersection point t values
         t_values = [None, None, None, None, None, None]
+        p_values = [None, None, None, None, None, None]
 
         if ray.dir.dx != 0:
-            t_values[0] = (-1 - ray.source.x) / ray.dir.dx  # left
-            t_values[3] = (1 - ray.source.x) / ray.dir.dx   # right
+            t_values[0] = (-1 - ray.source.x) / ray.dir.dx              # left
+            p_values[0] = ray.eval(t_values[0]) ; p_values[0].x = -1    # prevent round off in irrelevant dimension
+            t_values[3] = (1 - ray.source.x) / ray.dir.dx               # right
+            p_values[3] = ray.eval(t_values[3]) ; p_values[3].x = 1     # prevent round off in irrelevant dimension
         if ray.dir.dy != 0:
-            t_values[1] = (-1 - ray.source.y) / ray.dir.dy  # bottom
-            t_values[4] = (1 - ray.source.y) / ray.dir.dy   # top
+            t_values[1] = (-1 - ray.source.y) / ray.dir.dy              # bottom
+            p_values[1] = ray.eval(t_values[1]) ; p_values[1].y = -1    # prevent round off in irrelevant dimension
+            t_values[4] = (1 - ray.source.y) / ray.dir.dy               # top
+            p_values[4] = ray.eval(t_values[4]) ; p_values[4].y = 1     # prevent round off in irrelevant dimension
         if ray.dir.dz != 0:
-            t_values[2] = (-1 - ray.source.z) / ray.dir.dz  # front
-            t_values[5] = (1 - ray.source.z) / ray.dir.dz   # back
+            t_values[2] = (-1 - ray.source.z) / ray.dir.dz              # front
+            p_values[2] = ray.eval(t_values[2]) ; p_values[2].z = -1    # prevent round off in irrelevant dimension
+            t_values[5] = (1 - ray.source.z) / ray.dir.dz               # back
+            p_values[5] = ray.eval(t_values[5]) ; p_values[5].z = 1     # prevent round off in irrelevant dimension
 
         # calculate the points
         #   if a t value is not found, replace with -inf
@@ -148,8 +155,7 @@ class BoxObj(GeomObj):
             if t_values[i] == None:
                 t_values[i] = -float('inf')
             else:
-                point = ray.eval(t_values[i])
-                if abs(point.x) > 1 or abs(point.y) > 1 or abs(point.z) > 1:
+                if abs(p_values[i].x) > 1 or abs(p_values[i].y) > 1 or abs(p_values[i].z) > 1:
                     t_values[i] = -float('inf')
             # min tracking
             if t_values[i] >= 0 and t_values[i] < t_min:
