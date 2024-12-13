@@ -73,7 +73,8 @@ class Light:
             first_hit.t = 1 # Stop the search at the light source # Directional light
 
         # We will test a ray from object (hit.point) to the light (infinitely far away or at t=1)
-        ray = Ray(hit.point.__copy__(), Vector3(self.position[0], self.position[1], self.position[2]))
+        hit_loc = hit.point.__copy__()
+        ray = Ray(hit_loc, Vector3(self.position[0] - hit_loc.x, self.position[1] - hit_loc.y, self.position[2] - hit_loc.z))
         ignore_list = [self.obj, hit.obj] # Objects to skip in intersection test
         return 0 if scene.intersect(ray, first_hit, skip_translucent=True, just_one=True, ignore=ignore_list) else 1
  
