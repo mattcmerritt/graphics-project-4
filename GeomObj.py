@@ -4,6 +4,7 @@ from Material import Material
 from Ray import Ray
 from Hit import Hit
 from OpenGL.GL import *
+from PIL import Image
 
 class GeomObj:
     def __init__(self):
@@ -70,3 +71,40 @@ class GeomObj:
     """
     def local_intersect(self, ray, best_hit):
         raise NotImplementedError("Subclasses must implement local_intersect.")
+
+    # TEXTURING
+    """
+    Attaching a texture to the shape.
+    Textures will always fill the entire shape, and are not tiled.
+    Requires all loaded textures to be square
+
+    dim: Dimension of the image (MUST BE SQUARE)
+    """
+    def set_texture(self, filename, dim):
+        self.texture_dim = dim
+        self.texture = Image.open(filename)
+        self.texture = self.texture.transpose(method=Image.Transpose.FLIP_TOP_BOTTOM)
+
+    """
+    best_hit: Same as from local_intersect, stores the hit location
+    Returns: Color from point hit on the shape
+    """
+    def get_color_from_texture(self, best_hit):
+        raise NotImplementedError("Subclasses must implement get_color_from_texture.")
+
+    """
+    Helper method to get a pixel from the texture of any given size.
+    
+    x: Texture coordinate [0, 1]
+    y: Texture coordinate [0, 1]
+    Returns: Color from texture
+    """
+    def get_texture_pixel_color(self, x, y):
+        # change coordinates to be integers relative to dimensions
+        tx = round(self.texture_dim * x)
+        ty = round(self.texture_dim * y)
+
+        # grab pixel colors from image file
+        (r, g, b, a) = self.texture.getpixel((tx, ty))
+
+        return Color(r / 255, g / 255, b / 255, a / 255)

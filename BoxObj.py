@@ -175,3 +175,17 @@ class BoxObj(GeomObj):
     # TODO: handled by local_intersect
     # def compute_normal(self, point):
     #     normal = Vector3(0, 0, 0)
+
+    def get_color_from_texture(self, best_hit):
+        """
+        Method to determine the color of a point on the cube using the attached texture.
+        Returns the color associated
+        
+        logic:
+        1. use the normal to determine which of the six faces was hit
+        2. convert the hit point to a 2D point on the plane hit
+            planes are XY (front/back), XZ (top/bottom), and YZ (left/right)
+        3. map the 2D world point to a 2D texture point
+        4. sample the texture image at the 2D texture point to get the color
+        """
+        raise NotImplementedError("Subclasses must implement get_color_from_texture.")
