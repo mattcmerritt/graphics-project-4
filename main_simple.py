@@ -25,6 +25,7 @@ from Scene import Scene
 from SphereObj import SphereObj
 from BoxObj import BoxObj
 from CylinderObj import CylinderObj
+from OppositeCylinderObj import OppositeCylinderObj # TODO: delete
 from Material import Material
 from Light import Light
 from Color import Color
@@ -90,6 +91,16 @@ def init_scene():
     tube.translate(0,1,0)
     tube.scale(1, 1, 1)
     tube.name = "Tube 1"
+    scn.add_object(tube)
+
+    mat = Material()
+    mat.set_copper()
+    mat.set_reflectivity(0.1)
+    tube = OppositeCylinderObj(1, 2, 3)
+    tube.set_material(mat)
+    tube.translate(0,1,0)
+    tube.scale(1, 1, 1)
+    tube.name = "Tube 1 Opposite"
     scn.add_object(tube)
 
     # mat = Material()
