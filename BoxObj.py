@@ -58,16 +58,18 @@ class BoxObj(GeomObj):
 
     def render_solid(self, slices=10):
         """ Draw a unit cube with one corner at origin in positive octant."""    
-        # Draw side 1 (Front)
+        # Draw side 1 (Back)
         glPushMatrix()
         glTranslate(0, 0, 1)
+        glScale(-1, 1, 1)
         self.draw_side(slices, slices)
         glPopMatrix()
 
-        # Draw side 2 (Back)
+        # Draw side 2 (Front)
         glPushMatrix()
         glRotated(180, 0, 1, 0)
         glTranslate(0, 0, 1)
+        glScale(1, -1, 1)
         self.draw_side(slices, slices)
         glPopMatrix()
 
@@ -75,6 +77,7 @@ class BoxObj(GeomObj):
         glPushMatrix()
         glRotatef(-90, 0, 1, 0)
         glTranslate(0,0,1)
+        glRotatef(-90, 0, 0, 1)
         self.draw_side(slices, slices)
         glPopMatrix()
 
@@ -82,6 +85,7 @@ class BoxObj(GeomObj):
         glPushMatrix()
         glRotatef(90, 0, 1, 0)
         glTranslate(0,0,1)
+        glRotatef(90, 0, 0, 1)
         self.draw_side(slices, slices)
         glPopMatrix()
 
@@ -89,6 +93,7 @@ class BoxObj(GeomObj):
         glPushMatrix()
         glRotatef(-90, 1, 0, 0)
         glTranslate(0,0,1)
+        glScale(1, -1, 1)
         self.draw_side(slices, slices)
         glPopMatrix()
 
