@@ -3,6 +3,7 @@ import math
 from GeomObj import GeomObj
 from Vector3 import Vector3
 from Hit import Hit
+from Color import Color
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
@@ -122,4 +123,5 @@ class CylinderObj(GeomObj):
         best_hit.norm = Vector3(invert_for_inside * best_hit.point.x, invert_for_inside * best_hit.point.y, invert_for_inside * (self.r_end-self.r_start) / 2)
         best_hit.norm.normalize()   # stress relief normalization
         best_hit.obj = self
+        best_hit.texture_color = Color(1, 1, 1, 1) # defaults to white
         return True

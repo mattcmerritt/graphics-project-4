@@ -53,7 +53,7 @@ scn = Scene()
 light_angle = 0
 light_speed = 1
 # TODO: remove faster speed
-light_speed = 10
+# light_speed = 10
 light_distance = 5
 animate = True  # Animation
 
