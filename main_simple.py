@@ -102,33 +102,89 @@ def init_scene():
     mat.set_copper()
     mat.set_reflectivity(0.1)
 
-    ball = BoxObj()
-    ball.set_texture('resources/example_texture.png', 128)
-    ball.set_normal_map('resources/beveled_edges.png')
-    ball.set_material(mat)
-    ball.translate(0,1,0)
-    ball.scale(1, 2, 1)
-    ball.name = "Box 1"
-    scn.add_object(ball)
+    # boxes
+    textured_box = BoxObj()
+    textured_box.set_texture('resources/example_texture.png', 128)
+    textured_box.set_normal_map('resources/beveled_edges.png')
+    textured_box.set_material(mat)
+    textured_box.translate(0,1,0)
+    textured_box.scale(1, 2, 1)
+    textured_box.name = "Textured Box 1"
+    scn.add_object(textured_box)
 
-
+    # tapered cylinders
     tube = CylinderObj(1, 2, 3)
     tube.set_material(mat)
-    tube.translate(5,1,0)
+    tube.translate(5,1,2)
     tube.scale(1, 1, 1)
     tube.name = "Tube 1"
     scn.add_object(tube)
 
-    # mat = Material()
-    # mat.set_copper()
-    # mat.set_reflectivity(0.1)
-    # ball = SphereObj()
-    # ball.set_material(mat)
-    # ball.translate(0,1,0)
-    # ball.scale(1, 2, 1)
-    # ball.name = "Ball 1"
-    # scn.add_object(ball)
+    tube2 = CylinderObj(0, 1, 1)
+    tube2.set_material(mat)
+    tube2.translate(3,-1,0)
+    tube2.rotate(90, Vector3(1, 0, 0))
+    tube2.scale(1, 1, 1)
+    tube2.name = "Tube 2"
+    scn.add_object(tube2)
 
+    tube3 = CylinderObj(2, 1, 3)
+    tube3.set_material(mat)
+    tube3.translate(-10,1,-4)
+    tube3.scale(1, 1, 1)
+    tube3.name = "Tube 3"
+    scn.add_object(tube3)
+
+    tube4 = CylinderObj(1, 1, 5)
+    tube4.set_material(mat)
+    tube4.translate(4,3,-3)
+    tube4.rotate(90, Vector3(1, 0, 0))
+    tube4.scale(1, 1, 1)
+    tube4.name = "Tube 4"
+    scn.add_object(tube4)
+
+    # balls
+    mat = Material()
+    mat.set_gold()
+    mat.set_reflectivity(0.1)
+    ball = SphereObj()
+    ball.set_material(mat)
+    ball.translate(5,1,0)
+    ball.scale(1, 2, 1)
+    ball.name = "Ball 1"
+    scn.add_object(ball)
+
+    mat = Material()
+    mat.set_copper()
+    mat.set_reflectivity(0.8)
+    ball2 = SphereObj()
+    ball2.set_material(mat)
+    ball2.translate(-4,0,-8)
+    ball2.scale(1, 1, 1)
+    ball2.name = "Ball 2"
+    scn.add_object(ball2)
+
+    mat = Material()
+    mat.set_silver()
+    mat.set_reflectivity(0.8)
+    ball3 = SphereObj()
+    ball3.set_material(mat)
+    ball3.translate(-8,0,-8)
+    ball3.scale(1, 1, 1)
+    ball3.name = "Ball 3"
+    scn.add_object(ball3)
+
+    mat = Material()
+    mat.set_chrome()
+    mat.set_reflectivity(0.4)
+    ball4 = SphereObj()
+    ball4.set_material(mat)
+    ball4.translate(-10,0,10)
+    ball4.scale(2, 1, 2)
+    ball4.name = "Ball 4"
+    scn.add_object(ball4)
+
+    # walls
     mat = Material()
     mat.set_silver()
     mat.set_reflectivity(0.8)
@@ -136,7 +192,7 @@ def init_scene():
     floor.name = "Floor"
     floor.set_material(mat)
     floor.translate(0, -2, 0)
-    floor.scale(10, 0.1, 10)
+    floor.scale(15, 0.1, 15)
     scn.add_object(floor)
 
     # TODO: REPLACE LATER
@@ -146,29 +202,29 @@ def init_scene():
     forward_wall = BoxObj()
     forward_wall.name = "Forward Wall"
     forward_wall.set_material(mat)
-    forward_wall.translate(0, 3, -10)
-    forward_wall.scale(9, 5, 1)
+    forward_wall.translate(0, 3, -15)
+    forward_wall.scale(15, 5, 1)
     scn.add_object(forward_wall)
 
-    # backward_wall = BoxObj()
-    # backward_wall.name = "Backward Wall"
-    # backward_wall.set_material(mat)
-    # backward_wall.translate(0, 3, 10)
-    # backward_wall.scale(9, 5, 1)
-    # scn.add_object(backward_wall)
+    backward_wall = BoxObj()
+    backward_wall.name = "Backward Wall"
+    backward_wall.set_material(mat)
+    backward_wall.translate(0, 3, 15)
+    backward_wall.scale(15, 5, 1)
+    scn.add_object(backward_wall)
 
     left_wall = BoxObj()
     left_wall.name = "Left Wall"
     left_wall.set_material(mat)
-    left_wall.translate(-10, 3, 0)
-    left_wall.scale(1, 5, 9)
+    left_wall.translate(-15, 3, 0)
+    left_wall.scale(1, 5, 14)
     scn.add_object(left_wall)
 
     right_wall = BoxObj()
     right_wall.name = "Right Wall"
     right_wall.set_material(mat)
-    right_wall.translate(10, 3, 0)
-    right_wall.scale(1, 5, 9)
+    right_wall.translate(15, 3, 0)
+    right_wall.scale(1, 5, 14)
     scn.add_object(right_wall)
 
     # Light setup
