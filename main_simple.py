@@ -85,7 +85,7 @@ def init_scene():
     mat = Material()
     mat.set_copper()
     mat.set_reflectivity(0.1)
-    tube = CylinderObj()
+    tube = CylinderObj(1, 2, 3)
     tube.set_material(mat)
     tube.translate(0,1,0)
     tube.scale(1, 1, 1)

@@ -7,24 +7,37 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 
 class CylinderObj(GeomObj):
-    def __init__(self, resolution=100):
+    def __init__(self, r_start=1, r_end=1, height=1, resolution=100):
         super().__init__()
 
         self.tube = gluNewQuadric()
         self.resolution = resolution
+        self.r_start = r_start
+        self.r_end = r_end
+        self.height = height
         gluQuadricDrawStyle(self.tube, GLU_FILL)
         gluQuadricTexture(self.tube, GL_TRUE)
         gluQuadricNormals(self.tube, GLU_SMOOTH) 
 
-    def render_solid(self, slices=10):
-        """ Draw a cylinder aligned at on the z-axis with radius 1 and height 1."""    
-        gluCylinder(self.tube, 1, 1, 1, self.resolution, self.resolution)
+    def render_solid(self):
+        """ Draw a cylinder aligned at on the z-axis with radius r_start at one end, r_end at the other and height height."""    
+        gluCylinder(self.tube, self.r_start, self.r_end, self.height, self.resolution, self.resolution)
 
     def local_intersect(self, ray, best_hit):
         """
         explanation of logic:
         the cylinder can be defined by the equation
-        px**2 + py**2 = 1
+          px**2 + py**2 = r**2
+        
+        where r is linearly interpolated from the z value as such:
+          r = (r_end - r_start)/height * pz + r_start
+          r = (r_end - r_start)/height * (sz + t*dz) + r_start
+
+        for simplicity's sake, we add the following substitution:
+          r_lerp = (r_end - r_start)/height 
+        so
+          r = r_lerp*(sz + t*dz) + r_start
+          r = sz*r_lerp + dz*r_lerp*t + r_start
 
         let the origin of the ray be (sx, sy, sz) and (dx, dy, dz) be the direction vector
         any point on the ray can be defined with the following parametric equations:
@@ -33,45 +46,51 @@ class CylinderObj(GeomObj):
           pz = sz + t*dz
 
         with this information, we can find the point where the ray hits the cylinder by
-          by setting px, py, or pz equal the value from the cylinder equation.
+          by setting px, py, and pz equal the value from the cylinder equation.
 
         this gives us:
-          (sx + t*dx)**2 + (sy + t*dy) = 1
-          sx**2 + 2*sx*dx*t + dx**2*t**2 + sy**2 + 2*sy*dy*t + dy**2*t**2 = 1
-          sx**2 + 2*sx*dx*t + dx**2*t**2 + sy**2 + 2*sy*dy*t + dy**2*t**2 - 1 = 0
-          (dx**2 + dy**2)*t**2 + (2*sx*dx + 2*sy*dy)*t + (a**2 + c**2 - 1) = 0
-        
-        we can then use the quadratic formula to solve this equation for t:
-          t = (-(2*sx*dx + 2*sy*dy) +- sqrt((2*sx*dx + 2*sy*dy)**2 - 4*(dx**2 + dy**2)*(a**2 + c**2 - 1))) / 2*(dx**2 + dy**2)
-          t = (2*(-sx*dx - sy*dy) +- sqrt(4*sx**2*dx**2 + 8*sx*dx*sy*dy + 4*sy**2*dy**2 - 4*sx**2*dx**2 - 4*dx**2*sy**2 + 4*dx**2 - 4*sx**2*dy**2 - 4*sy**2*dy**2 + 4*dy**2)) / 2*(dx**2 + dy**2)
-          t = (2*(-sx*dx - sy*dy) +- sqrt(8*sx*dx*sy*dy - 4*dx**2*sy**2 + 4*dx**2 - 4*sx**2*dy**2 + 4*dy**2)) / 2*(dx**2 + dy**2)
-          t = (2*(-sx*dx - sy*dy) +- 2*sqrt(2*sx*dx*sy*dy - dx**2*sy**2 + dx**2 - sx**2*dy**2 + dy**2)) / 2*(dx**2 + dy**2)
-          t = (-sx*dx - sy*dy +- sqrt(2*sx*dx*sy*dy - dx**2*sy**2 + dx**2 - sx**2*dy**2 + dy**2)) / (dx**2 + dy**2)
+          (sx + t*dx)**2 + (sy + t*dy) = (sz*r_lerp + dz*r_lerp*t + r_start)**2
+          sx**2 + 2*sx*dx*t + dx**2*t**2 + sy**2 + 2*sy*dy*t + dy**2*t**2 = sz**2*r_lerp**2 + 2*sz*dz*r_lerp**2*t + 2*sz*r_lerp*r_start + dz**2*r_lerp**2*t**2 + 2*dz*r_lerp*r_start*t + r_start**2
+          sx**2 + 2*sx*dx*t + dx**2*t**2 + sy**2 + 2*sy*dy*t + dy**2*t**2 - sz**2*r_lerp**2 - 2*sz*dz*r_lerp**2*t - 2*sz*r_lerp*r_start - dz**2*r_lerp**2*t**2 - 2*dz*r_lerp*r_start*t - r_start**2 = 0
+          (dx**2 + dy**2 - dz**2*r_lerp**2)*t**2 + (2*sx*dx + 2*sy*dy - 2*sz*dz*r_lerp**2 - 2*dz*r_lerp*r_start)*t + (sx**2 + sy**2 - sz**2*r_lerp**2 - 2*sz*r_lerp*r_start - r_start**2) = 0
+          
+        so now we can use the quadratic formula with
+          a = dx**2 + dy**2 - dz**2*r_lerp**2
+          b = 2*sx*dx + 2*sy*dy - 2*sz*dz*r_lerp**2 - 2*dz*r_lerp*r_start
+          c = sx**2 + sy**2 - sz**2*r_lerp**2 - 2*sz*r_lerp*r_start - r_start**2
 
-        where t1 uses the smaller value (-), and t2 uses the larger value (+), or:
-          t1 = (-sx*dx -sy*dy - sqrt(2*sx*dx*sy*dy - dx**2*sy**2 + dx**2 - sx**2*dy**2 + dy**2)) / (dx**2 + dy**2)
-          t2 = (-sx*dx -sy*dy + sqrt(2*sx*dx*sy*dy - dx**2*sy**2 + dx**2 - sx**2*dy**2 + dy**2)) / (dx**2 + dy**2)
+        we should check the discriminant beforehand to ensure there is a collision
+          disc = b**2 - 4*a*c
+          sqrt_disc = math.sqrt(disc) # saves calculation time
 
-        however, we should check the discriminant beforehand to ensure we have two real solutions.
-          if we do not have any real solutions (discriminant is negative), there is no collision.
-          if we have one real solution (discriminant is 0), there is only one collision point (line is tangent to the cylinder).
-          disc = 2*sx*dx*sy*dy - dx**2*sy**2 + dx**2 - sx**2*dy**2 + dy**2
-          t1 = (-sx*dx -sy*dy - sqrt(disc)) / (dx**2 + dy**2)
-          t2 = (-sx*dx -sy*dy + sqrt(disc)) / (dx**2 + dy**2)
+        gather the two (or one if the same) solutions
+          t1 = (-b - sqrt_disc) / (2*a)
+          t2 = (-b + sqrt_disc) / (2*a)
 
         if t1 != t2 and both exist, the lower of t1 and t2 is the entrance point, and the other is the exit point.
+        if t1 == t2, there is only a collision point (ray is tangent to cylinder).
         """
 
-        # calculate (simplified) discriminant to figure out number of solutions
-        disc = 2*ray.source.x*ray.dir.dx*ray.source.y*ray.dir.dy - ray.dir.dx**2*ray.source.y**2 + ray.dir.dx**2 - ray.source.x**2*ray.dir.dy**2 + ray.dir.dy**2
+        # define r_lerp
+        r_lerp = (self.r_end - self.r_start)/self.height    # this is a factor, not actually the radius!
+
+        # set up for quadratic formula
+        a = ray.dir.dx**2 + ray.dir.dy**2 - ray.dir.dz**2*r_lerp**2
+        b = 2*ray.source.x*ray.dir.dx + 2*ray.source.y*ray.dir.dy - 2*ray.source.z*ray.dir.dz*r_lerp**2 - 2*ray.dir.dz*r_lerp*self.r_start
+        c = ray.source.x**2 + ray.source.y**2 - ray.source.z**2*r_lerp**2 - 2*ray.source.z*r_lerp*self.r_start - self.r_start**2
+
+        # calculate discriminant to figure out number of solutions
+        disc = b**2 - 4*a*c
 
         # if no real solutions
         if disc < 0:
             return False
 
+        sqrt_disc = math.sqrt(disc) # saves calculation time
+
         # find real solutions, lower one is entry point
-        t1 = (-ray.source.x*ray.dir.dx - ray.source.y*ray.dir.dy - math.sqrt(disc)) / (ray.dir.dx**2 + ray.dir.dy**2)
-        t2 = (-ray.source.x*ray.dir.dx - ray.source.y*ray.dir.dy + math.sqrt(disc)) / (ray.dir.dx**2 + ray.dir.dy**2)
+        t1 = (-b - sqrt_disc) / (2*a)
+        t2 = (-b + sqrt_disc) / (2*a)
         t_min = min(t1, t2)
 
         # if solution worse than existing
@@ -79,8 +98,11 @@ class CylinderObj(GeomObj):
             return False
           
         # fail if solution point does not collide with a valid z coordinate for the cylinder
-        if ray.source.z + t_min * ray.dir.dz < 0 or ray.source.z + t_min * ray.dir.dz > 1:
+        if ray.source.z + t_min * ray.dir.dz < 0 or ray.source.z + t_min * ray.dir.dz > self.height:
             return False
+
+        # determine if inside or outside point should be used
+        # TODO: do it
         
         # else new solution
         best_hit.t = t_min
