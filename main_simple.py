@@ -283,7 +283,7 @@ def init_scene():
     set_looping_light_positions(lightA)
 
     # Stationary lights
-    lightB = Light()
+    lightB = Light(ambient=Color(0.1, 0.1, 0.1, 1.0), diffuse=Color(0.5, 0.5, 0.5, 1.0), specular=Color(0.5, 0.5, 0.5, 1.0), id=GL_LIGHT1)
     scn.add_light(lightB)
     mat = Material()
     mat.set_emissive_only(lightB.get_diffuse())
@@ -298,7 +298,7 @@ def init_scene():
     lightB.obj.scale(0.2, 0.2, 0.2)
 
     # Stationary lights
-    lightC = Light()
+    lightC = Light(ambient=Color(0.1, 0.1, 0.1, 1.0), diffuse=Color(0.5, 0.5, 0.5, 1.0), specular=Color(0.5, 0.5, 0.5, 1.0), id=GL_LIGHT2)
     scn.add_light(lightC)
     mat = Material()
     mat.set_emissive_only(lightC.get_diffuse())
@@ -313,7 +313,7 @@ def init_scene():
     lightC.obj.scale(0.2, 0.2, 0.2)
 
     # Stationary lights
-    lightD = Light()
+    lightD = Light(ambient=Color(0.1, 0.1, 0.1, 1.0), diffuse=Color(0.5, 0.5, 0.5, 1.0), specular=Color(0.5, 0.5, 0.5, 1.0), id=GL_LIGHT3)
     scn.add_light(lightD)
     mat = Material()
     mat.set_emissive_only(lightD.get_diffuse())
