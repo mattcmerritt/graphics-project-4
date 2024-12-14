@@ -60,7 +60,7 @@ All implementations and modifications are our own. Textures are our own, unless 
 
 The features are the following:
 
-- Scene construction - Scene is included with walls, cieling, floor, and an assortment of shapes.
+- Scene construction - Scene is included with walls, ceiling, floor, and an assortment of shapes.
 - Box ray intersection - Rays will intersect boxes on all six faces, without any surface errors. The hit location, norm, and texture color are all returned.
 - Cylinder ray intersection - Rays will intersect cylinders on both the inside and outside faces. The hit location and norm are returned.
 - Texture mapping - Boxes support texture mapping, and are tiled to allow wrapping around corners. These textures are applied multiplicatively when raytracing (effectively similar to GL_MODULATE texturing mode).
