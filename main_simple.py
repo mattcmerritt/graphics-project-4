@@ -113,6 +113,9 @@ def init_scene():
     scn.add_object(textured_box)
 
     # tapered cylinders
+    mat = Material()
+    mat.set_copper()
+    mat.set_reflectivity(0.7)
     tube = CylinderObj(1, 2, 3)
     tube.set_material(mat)
     tube.translate(5,1,2)
@@ -120,14 +123,20 @@ def init_scene():
     tube.name = "Tube 1"
     scn.add_object(tube)
 
-    tube2 = CylinderObj(0, 1, 1)
+    mat = Material()
+    mat.set_gold()
+    mat.set_reflectivity(0.7)
+    tube2 = CylinderObj(0, 1, 3)
     tube2.set_material(mat)
-    tube2.translate(3,-1,0)
+    tube2.translate(3,1,0)
     tube2.rotate(90, Vector3(1, 0, 0))
     tube2.scale(1, 1, 1)
     tube2.name = "Tube 2"
     scn.add_object(tube2)
 
+    mat = Material()
+    mat.set_pewter()
+    mat.set_reflectivity(0.1)
     tube3 = CylinderObj(2, 1, 3)
     tube3.set_material(mat)
     tube3.translate(-10,1,-4)
@@ -135,6 +144,9 @@ def init_scene():
     tube3.name = "Tube 3"
     scn.add_object(tube3)
 
+    mat = Material()
+    mat.set_silver()
+    mat.set_reflectivity(0.4)
     tube4 = CylinderObj(1, 1, 5)
     tube4.set_material(mat)
     tube4.translate(4,3,-3)
