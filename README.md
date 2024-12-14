@@ -54,6 +54,7 @@ All textures are available in the `resources` directory.
 All implementations and modifications are our own. Textures are our own, unless otherwise mentioned below.
 
 - beveled_edges.png - Cropped and rescaled from https://commons.wikimedia.org/wiki/File:Normal_map_example_-_Map.png, by Julian Herzog
+- normal_donut.png - Cropped and rescaled from https://commons.wikimedia.org/wiki/File:Normal_map_example_-_Map.png, by Julian Herzog
 
 ## Features
 
