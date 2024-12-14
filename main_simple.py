@@ -222,6 +222,16 @@ def init_scene():
     scn.add_object(ball4)
 
     # walls
+    mat = Material() # uses the flat default material
+    mat.set_reflectivity(0.1)
+    ceiling = BoxObj()
+    ceiling.set_texture('resources/ceiling.png', 128)
+    ceiling.name = "Ceiling"
+    ceiling.set_material(mat)
+    ceiling.translate(0, 8, 0)
+    ceiling.scale(15, 0.1, 15)
+    scn.add_object(ceiling)
+    
     mat = Material()
     mat.set_silver()
     mat.set_reflectivity(0.3)
